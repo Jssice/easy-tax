@@ -14,32 +14,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useState, useEffect } from "react";
 import superRates from "@/data/superRates.json";
+import useStore from "@/lib/store";
 
-function Superannuation({ onYearChange, onSuperRateChange }) {
-  const [selectedYear, setSelectedYear] = useState("2023");
-  const [superRate, setsuperRate] = useState("11.00");
+function Superannuation() {
+  const {
+    selectedYear,
+    superRate,
+    setSelectedYear,
+    setSuperRate,
+    setSuperGuaranteeRate,
+  } = useStore();
 
   const handleYearChange = (value) => {
     const selectedRate = superRates.find((rate) => rate.value === value);
-    if (selectedRate) {
-      setSelectedYear(selectedRate.value);
-      setsuperRate(selectedRate.rate.toFixed(2));
-      onSuperRateChange(selectedRate.rate);
-    } else {
-      setSelectedYear("");
-      setsuperRate("");
-    }
+    setSelectedYear(selectedRate ? selectedRate.value : "");
+    setSuperRate(selectedRate ? selectedRate.rate.toFixed(2) : "");
+    setSuperGuaranteeRate(selectedRate ? selectedRate.rate : "");
   };
-
-  useEffect(() => {
-    onYearChange(selectedYear);
-  }, [selectedYear]);
-
-  useEffect(() => {
-    onSuperRateChange(superRate);
-  }, [superRate]);
 
   return (
     <AccordionItem value="superannuation">
@@ -67,13 +59,13 @@ function Superannuation({ onYearChange, onSuperRateChange }) {
             </Select>
           </div>
           <div>
-            <Label htmlFor="super">Super contribution ( % )</Label>
+            <Label htmlFor="super">Super Rate ( % )</Label>
             <div className="relative">
               <Input
                 type="text"
                 id="super"
                 value={superRate}
-                onChange={(event) => setsuperRate(event.target.value)}
+                onChange={(event) => setSuperRate(event.target.value)}
               />
             </div>
           </div>

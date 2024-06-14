@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -13,13 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import useStore from "@/lib/store";
 
 function MedicareOffset() {
-  const [hasPrivateHospitalCover, setHasPrivateHospitalCover] = useState(false);
-  const [hasMedicareLevyExemption, setHasMedicareLevyExemption] =
-    useState(false);
-  const [medicareLevyExemptionType, setMedicareLevyExemptionType] =
-    useState("0");
+  const {
+    hasPrivateHospitalCover,
+    setHasPrivateHospitalCover,
+    hasMedicareLevyExemption,
+    setHasMedicareLevyExemption,
+    medicareLevyExemptionType,
+    setMedicareLevyExemptionType,
+  } = useStore();
 
   return (
     <AccordionItem value="medicare_offset">

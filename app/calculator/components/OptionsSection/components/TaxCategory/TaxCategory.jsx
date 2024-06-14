@@ -7,14 +7,11 @@ import {
 } from "@/components/ui/accordion";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useState } from "react";
+import useStore from "@/lib/store";
 
-function TaxCategory({ onCategoryChange }) {
-  const [selectedCategory, setSelectedCategory] = useState("resident");
+function TaxCategory() {
+  const { selectedCategory, setSelectedCategory } = useStore();
 
-  useEffect(() => {
-    onCategoryChange(selectedCategory);
-  }, [selectedCategory]);
   return (
     <AccordionItem value="tax_category">
       <AccordionTrigger>Tax Category</AccordionTrigger>
