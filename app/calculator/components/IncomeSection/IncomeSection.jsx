@@ -10,22 +10,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   getTitle,
   calculateAnnualIncome,
   frequencyOptions,
   formatNumberToTwoDecimalPlaces,
 } from "@/utils/incomeUtils";
+import useStore from "@/lib/store";
 
-export default function IncomeSection({ onAnnualIncomeChange }) {
+export default function IncomeSection() {
   const [frequency, setFrequency] = useState("year");
   const [income, setIncome] = useState(60000);
   const [workDays, setWorkDays] = useState(0);
   const [workHours, setWorkHours] = useState(0);
   const [includeSuper, setIncludeSuper] = useState(false);
+  const { setAnnualIncome } = useStore();
 
-  const calculateAdjustedAnnualIncome = () => {
+  const calculateAdjustedAnnualIncome = useCallback(() => {
     let annualIncome = formatNumberToTwoDecimalPlaces(
       calculateAnnualIncome(income, frequency, workDays, workHours)
     );
@@ -33,12 +35,19 @@ export default function IncomeSection({ onAnnualIncomeChange }) {
       annualIncome /= 1 + 11 / 100;
     }
     return annualIncome;
-  };
+  }, [income, frequency, workDays, workHours, includeSuper]);
 
   useEffect(() => {
     const newAnnualIncome = calculateAdjustedAnnualIncome();
-    onAnnualIncomeChange(newAnnualIncome);
-  }, [income, frequency, workDays, workHours, includeSuper]);
+    setAnnualIncome(newAnnualIncome);
+  }, [
+    income,
+    frequency,
+    workDays,
+    workHours,
+    includeSuper,
+    calculateAdjustedAnnualIncome,
+  ]);
 
   return (
     <div className="flex flex-col">
@@ -49,7 +58,7 @@ export default function IncomeSection({ onAnnualIncomeChange }) {
         </Label>
         <div className="flex items-end mt-2">
           <Input
-            type="text"
+            type="number"
             id="income"
             value={income}
             onChange={(e) => setIncome(e.target.value)}

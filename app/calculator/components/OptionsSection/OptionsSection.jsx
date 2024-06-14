@@ -5,7 +5,7 @@ import Superannuation from "./components/Superannuation";
 import TaxCategory from "./components/TaxCategory";
 import MedicareOffset from "./components/MedicareOffset";
 
-function OptionsSection({ onYearChange, onSuperRateChange, onCategoryChange }) {
+function OptionsSection() {
   return (
     <div>
       <Label className="text-xl">Options</Label>
@@ -14,11 +14,8 @@ function OptionsSection({ onYearChange, onSuperRateChange, onCategoryChange }) {
         Adjust these options to tailor the calculations to your specific needs.
       </p>
       <Accordion type="multiple" defaultValue={["superannuation"]}>
-        <Superannuation
-          onYearChange={onYearChange}
-          onSuperRateChange={onSuperRateChange}
-        />
-        <TaxCategory onCategoryChange={onCategoryChange} />
+        <Superannuation />
+        <TaxCategory />
         <MedicareOffset />
       </Accordion>
     </div>
