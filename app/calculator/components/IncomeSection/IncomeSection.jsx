@@ -25,14 +25,14 @@ export default function IncomeSection() {
   const [workDays, setWorkDays] = useState(0);
   const [workHours, setWorkHours] = useState(0);
   const [includeSuper, setIncludeSuper] = useState(false);
-  const { setAnnualIncome } = useStore();
+  const { setAnnualIncome, superRate } = useStore();
 
   const calculateAdjustedAnnualIncome = useCallback(() => {
     let annualIncome = formatNumberToTwoDecimalPlaces(
       calculateAnnualIncome(income, frequency, workDays, workHours)
     );
     if (includeSuper) {
-      annualIncome /= 1 + 11 / 100;
+      annualIncome /= 1 + parseFloat(superRate) / 100;
     }
     return annualIncome;
   }, [income, frequency, workDays, workHours, includeSuper]);
