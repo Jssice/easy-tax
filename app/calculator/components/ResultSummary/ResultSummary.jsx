@@ -1,10 +1,12 @@
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SummaryCard from "./components/SummaryCard";
+import VisualizationCard from "./components/VisualizationCard";
 
 import useStore from "@/lib/store";
 
 import { computeTaxValues, computeSuperValues } from "@/utils/taxUtils";
+import { useEffect } from "react";
 
 function ResultSummary() {
   const {
@@ -16,27 +18,53 @@ function ResultSummary() {
     hasPrivateHospitalCover,
     hasMedicareLevyExemption,
     medicareLevyExemptionType,
+    setVisualData,
+    setAverageTaxRate,
+    setMarginalTaxRate,
   } = useStore();
 
-  const { incomeTax, medicare, totalTax, netPay, medicareLevySurcharge } =
-    computeTaxValues(
-      selectedYear,
-      selectedCategory,
-      annualIncome,
-      hasPrivateHospitalCover,
-      hasMedicareLevyExemption,
-      medicareLevyExemptionType
-    );
+  const {
+    incomeTax,
+    medicare,
+    totalTax,
+    netPay,
+    medicareLevySurcharge,
+    marginalTaxRate,
+    averageTaxRate,
+  } = computeTaxValues(
+    selectedYear,
+    selectedCategory,
+    annualIncome,
+    hasPrivateHospitalCover,
+    hasMedicareLevyExemption,
+    medicareLevyExemptionType
+  );
 
   const { superGuarantee, reportableContributions } = computeSuperValues(
     annualIncome,
     superRate,
     superGuaranteeRate
   );
+  useEffect(() => {
+    const netPayRate = parseFloat(((netPay / annualIncome) * 100).toFixed(1));
+    const newVisualData = [
+      { name: "Net pay", rate: netPayRate },
+      {
+        name: "Total tax",
+        rate: averageTaxRate,
+      },
+    ];
+    setVisualData(newVisualData);
+  }, [netPay, annualIncome, averageTaxRate, setVisualData]);
+
+  useEffect(() => {
+    setAverageTaxRate(averageTaxRate);
+    setMarginalTaxRate(marginalTaxRate);
+  }, [averageTaxRate, marginalTaxRate, setAverageTaxRate, setMarginalTaxRate]);
 
   return (
-    <div className="container flex-1 flex flex-col ">
-      <Label className="font-bold text-lg p-4">
+    <div className="container flex-1 flex flex-col space-y-4 ">
+      <Label className="font-bold text-xl p-4">
         Your Tax summary {selectedYear} to {selectedYear - -1}
       </Label>
       <Tabs defaultValue="annually">
@@ -103,6 +131,7 @@ function ResultSummary() {
           />
         </TabsContent>
       </Tabs>
+      <VisualizationCard />
     </div>
   );
 }

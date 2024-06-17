@@ -4,17 +4,19 @@ import { getMedicareLevySurchargeRate } from "./getMedicareLevySurchargeRate";
 export const calculateTax = (year, category, income) => {
   const taxRates = getTaxRates(year, category);
   let tax = 0;
+  let marginalTaxRate = 0;
 
   for (let i = 0; i < taxRates.length; i++) {
     const { threshold, rate, baseTax } = taxRates[i];
 
     if (income > threshold) {
       tax = baseTax + (income - threshold) * rate;
+      marginalTaxRate = rate;
       break;
     }
   }
 
-  return tax;
+  return { tax, marginalTaxRate };
 };
 
 export const computeTaxValues = (
@@ -25,7 +27,11 @@ export const computeTaxValues = (
   hasMedicareLevyExemption,
   medicareLevyExemptionType
 ) => {
-  const incomeTax = calculateTax(selectedYear, selectedCategory, annualIncome);
+  const { tax: incomeTax, marginalTaxRate } = calculateTax(
+    selectedYear,
+    selectedCategory,
+    annualIncome
+  );
 
   const medicareLevySurchargeRate = getMedicareLevySurchargeRate(
     selectedYear,
@@ -43,6 +49,9 @@ export const computeTaxValues = (
     : medicareLevy;
   const totalTax = incomeTax + medicare + medicareLevySurcharge;
   const netPay = annualIncome - totalTax;
+  const averageTaxRate = parseFloat(
+    ((totalTax / annualIncome) * 100).toFixed(1)
+  );
 
   return {
     incomeTax,
@@ -50,6 +59,8 @@ export const computeTaxValues = (
     totalTax,
     netPay,
     medicareLevySurcharge,
+    marginalTaxRate,
+    averageTaxRate,
   };
 };
 

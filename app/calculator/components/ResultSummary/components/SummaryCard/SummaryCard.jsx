@@ -1,7 +1,14 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Separator } from "@/components/ui/separator";
 import { formatCurrency } from "@/utils/format";
+import useStore from "@/lib/store";
 
 function SummaryCard({
   income,
@@ -13,6 +20,7 @@ function SummaryCard({
   reportableContributions,
   medicareLevySurcharge,
 }) {
+  const { averageTaxRate, marginalTaxRate } = useStore();
   return (
     <Card>
       <CardHeader>
@@ -68,7 +76,6 @@ function SummaryCard({
                 {formatCurrency(superGuarantee)}
               </TableCell>
             </TableRow>
-
             {reportableContributions > 0 ? (
               <TableRow>
                 <TableCell className="">Reportable contributions</TableCell>
@@ -80,6 +87,24 @@ function SummaryCard({
           </TableBody>
         </Table>
       </CardContent>
+      <CardFooter>
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell className="text-xs">Marginal tax rate</TableCell>
+              <TableCell className="text-right text-xs">
+                {marginalTaxRate * 100}%
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell className="text-xs">Average tax rate</TableCell>
+              <TableCell className="text-right text-xs">
+                {averageTaxRate}%
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </CardFooter>
     </Card>
   );
 }
