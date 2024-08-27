@@ -1,0 +1,105 @@
+pipeline {
+    agent any
+
+    stages {
+        // stage("build") {
+        //     // when {
+        //     //     expression {
+        //     //         BRANCH_NAME == 'dev' && CODE_CHANGE == true
+        //     //     }
+        //     // }
+            
+        //     steps {
+        //         echo 'building the app ...'
+        //     }
+        // }
+
+        // stage("test") {
+        //     when {
+        //         expression {
+        //             BRANCH_NAME == 'dev'
+        //         }
+        //     }
+        //     steps {
+        //         echo 'testing the app ...'
+        //     }
+        // }
+
+
+        // stage('Check Git Path') {
+        //     steps {
+        //         script {
+        //             // 显示 Git 的安装路径
+        //             sh 'which git'
+                    
+        //             // 显示 Git 版本
+        //             sh 'git --version'
+        //         }
+        //     }
+        // }
+
+        // stage('Print Current Directory0') {
+        //     steps {
+        //         script {
+        //             sh 'pwd'  // 对于 Linux/MacOS
+        //             sh 'ls -la'
+        //         }
+        //     }
+        // }
+
+        // stage('Print Workspace Directory0') {
+        //     steps {
+        //         dir('easy-tax') {
+        //             sh 'pwd'  // 对于 Linux/MacOS
+        //             sh 'ls -la'
+        //         }
+        //     }
+        // }
+        
+        // stage('Clean Workspace') {
+        //     steps {
+        //         deleteDir() // Deletes the workspace contents
+        //     }
+        // }
+        
+        stage('Checkout Code') {
+            steps {
+                git url: 'https://github.com/Jssice/easy-tax.git'
+            }
+        }
+
+        // stage('Print Workspace Directory') {
+        //     steps {
+        //         dir('easy-tax') {
+        //             sh 'pwd'  // 对于 Linux/MacOS
+        //             sh 'ls -la'
+        //         }
+        //     }
+        // }
+
+        // stage('Print Current Directory') {
+        //     steps {
+        //         script {
+        //             sh 'pwd'  // 对于 Linux/MacOS
+        //             sh 'ls -la'
+        //         }
+        //     }
+        // }
+
+
+        // stage('Check Git Version') {
+        //     steps {
+        //         script {
+        //             // 使用 shell 命令查看 Git 版本
+        //             sh 'git --version'
+        //         }
+        //     }
+        // }
+
+        stage('Check npm Version') {
+            steps {
+                // Print npm version
+                sh 'npm --version'
+            }
+        }
+    }}
