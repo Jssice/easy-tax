@@ -1,0 +1,41 @@
+---
+- name: Configure Nginx with Let's Encrypt SSL
+  hosts: webservers
+  become: yes
+  # vars:
+  #   domain_name: "ec2-13-210-47-135.ap-southeast-2.compute.amazonaws.com"
+  #   email: "123@example.com"
+  #   web_root: "/home/ubuntu/easy-tax"
+  tasks:
+    - name: Update apt repository
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx service
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Copy Nginx configuration file
+      template:
+        src: nginxconfig.j2
+        dest: /etc/nginx/nginx.conf
+      notify:
+        - restart nginx
+
+    - name: Ensure Nginx is running
+      systemd:
+        name: nginx
+        state: started
+
+  handlers:
+    - name: restart nginx
+      systemd:
+        name: nginx
+        state: restarted
